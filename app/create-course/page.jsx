@@ -7,6 +7,7 @@ import {
   HiLightBulb,
   HiMiniSquares2X2,
 } from 'react-icons/hi2';
+import SelectCategory from './_components/SelectCategory';
 
 function CreateCourse() {
   const StepperOptions = [
@@ -61,6 +62,7 @@ function CreateCourse() {
 
       <div className="px-10 md:px-20 lg:px-44 mt-10">
         {/* Components */}
+        {activeStep === 0 && <SelectCategory />}
 
         {/* Next Previous Buttons */}
         <div className="flex justify-between items-center mt-10">
