@@ -11,6 +11,8 @@ import SelectCategory from './_components/SelectCategory';
 import TopicDescription from './_components/TopicDescription';
 import SelectOption from './_components/SelectOption';
 import { UserInputContext } from '../_context/UserInputContext';
+import { GenerateCourseLayout } from '@/configs/AiModel';
+import LoadingDialog from './_components/LoadingDialog';
 
 function CreateCourse() {
   const StepperOptions = [
@@ -32,6 +34,7 @@ function CreateCourse() {
   ];
 
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
+  const [loading, setLoading] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
@@ -77,6 +80,21 @@ function CreateCourse() {
       default:
         return false;
     }
+  };
+
+  const handleGenerateCourseLayout = async () => {
+    setLoading(true);
+    const BASIC_PROMPT =
+      'Generate A Course Tutorial on Following Detail with field as Course Name, Description, along with Chapter Name, About, Duration: ';
+    const USER_INPUT_PROMPT = `Category: ${userCourseInput.category}, Topic: ${userCourseInput.topic}, Level: ${userCourseInput.level}, Duration: ${userCourseInput.duration}, NoOfChapters: ${userCourseInput.noOfChapters}`;
+    console.log(BASIC_PROMPT + USER_INPUT_PROMPT);
+
+    const result = await GenerateCourseLayout.sendMessage(
+      BASIC_PROMPT + USER_INPUT_PROMPT
+    );
+    console.log(result.response);
+    console.log(JSON.parse(result.response.text()));
+    setLoading(false);
   };
 
   return (
@@ -137,10 +155,16 @@ function CreateCourse() {
             </Button>
           )}
           {activeStep == 2 && (
-            <Button disabled={checkStatus()}>Generate Course Layout</Button>
+            <Button
+              disabled={checkStatus()}
+              onClick={handleGenerateCourseLayout}
+            >
+              Generate Course Layout
+            </Button>
           )}
         </div>
       </div>
+      <LoadingDialog loading={loading} />
     </div>
   );
 }
