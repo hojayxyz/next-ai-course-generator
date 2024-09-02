@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   HiClipboardDocumentCheck,
   HiLightBulb,
@@ -10,27 +10,74 @@ import {
 import SelectCategory from './_components/SelectCategory';
 import TopicDescription from './_components/TopicDescription';
 import SelectOption from './_components/SelectOption';
+import { UserInputContext } from '../_context/UserInputContext';
 
 function CreateCourse() {
   const StepperOptions = [
     {
-      id: 1,
+      id: 'Option1',
       name: 'Category',
       icon: <HiMiniSquares2X2 />,
     },
     {
-      id: 1,
+      id: 'Option2',
       name: 'Topic & Desc',
       icon: <HiLightBulb />,
     },
     {
-      id: 1,
+      id: 'Option3',
       name: 'Options',
       icon: <HiClipboardDocumentCheck />,
     },
   ];
 
+  const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
   const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    console.log(userCourseInput);
+  }, [userCourseInput]);
+
+  const checkStatus = () => {
+    if (!userCourseInput || Object.keys(userCourseInput).length === 0) {
+      return true;
+    }
+
+    const {
+      category,
+      topic,
+      description,
+      video,
+      duration,
+      difficulty,
+      chapters,
+    } = userCourseInput;
+
+    switch (activeStep) {
+      case 0:
+        return !category || category.trim() === '';
+      case 1:
+        return (
+          !topic ||
+          topic.trim() === '' ||
+          !description ||
+          description.trim() === ''
+        );
+      case 2:
+        return (
+          !difficulty ||
+          difficulty.trim() === '' ||
+          !duration ||
+          duration.trim() === '' ||
+          !video ||
+          video.trim() === '' ||
+          !chapters ||
+          chapters.length === 0
+        );
+      default:
+        return false;
+    }
+  };
 
   return (
     <div>
@@ -83,13 +130,15 @@ function CreateCourse() {
 
           {activeStep < 2 && (
             <Button
-              disabled={activeStep === StepperOptions.length - 1}
+              disabled={checkStatus()}
               onClick={() => setActiveStep(activeStep + 1)}
             >
               Next
             </Button>
           )}
-          {activeStep == 2 && <Button>Generate Course Layout</Button>}
+          {activeStep == 2 && (
+            <Button disabled={checkStatus()}>Generate Course Layout</Button>
+          )}
         </div>
       </div>
     </div>
