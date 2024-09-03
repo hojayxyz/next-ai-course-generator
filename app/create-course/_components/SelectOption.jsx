@@ -22,12 +22,12 @@ function SelectOption() {
     <div className="px-10 md:px-20 lg:px-44">
       <div className="grid grid-cols-2 gap-10">
         <div>
-          <label className="text-sm" htmlFor="difficulty">
+          <label className="text-sm" htmlFor="level">
             Difficulty Level
           </label>
           <Select
-            onValueChange={(value) => handleInputChange('difficulty', value)}
-            defaultValue={userCourseInput.difficulty}
+            onValueChange={(value) => handleInputChange('level', value)}
+            defaultValue={userCourseInput.level}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select" />

@@ -13,6 +13,10 @@ import SelectOption from './_components/SelectOption';
 import { UserInputContext } from '../_context/UserInputContext';
 import { GenerateCourseLayout } from '@/configs/AiModel';
 import LoadingDialog from './_components/LoadingDialog';
+import { db } from '@/configs/db';
+import { CourseList } from '@/configs/schema';
+import { useUser } from '@clerk/nextjs';
+import uuid4 from 'uuid4';
 
 function CreateCourse() {
   const StepperOptions = [
@@ -36,6 +40,7 @@ function CreateCourse() {
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
   const [loading, setLoading] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const { user } = useUser();
 
   useEffect(() => {
     console.log(userCourseInput);
@@ -46,15 +51,8 @@ function CreateCourse() {
       return true;
     }
 
-    const {
-      category,
-      topic,
-      description,
-      video,
-      duration,
-      difficulty,
-      chapters,
-    } = userCourseInput;
+    const { category, topic, description, video, duration, level, chapters } =
+      userCourseInput;
 
     switch (activeStep) {
       case 0:
@@ -68,8 +66,8 @@ function CreateCourse() {
         );
       case 2:
         return (
-          !difficulty ||
-          difficulty.trim() === '' ||
+          !level ||
+          level.trim() === '' ||
           !duration ||
           duration.trim() === '' ||
           !video ||
@@ -94,6 +92,24 @@ function CreateCourse() {
     );
     console.log(result.response);
     console.log(JSON.parse(result.response.text()));
+    setLoading(false);
+    handleSaveCourseInDb(JSON.parse(result.response.text()));
+  };
+
+  const handleSaveCourseInDb = async (courseLayout) => {
+    setLoading(true);
+    var id = uuid4();
+    const result = await db.insert(CourseList).values({
+      courseId: id,
+      name: userCourseInput.topic,
+      level: userCourseInput.level,
+      category: userCourseInput.category,
+      courseOutput: courseLayout,
+      createdBy: user?.primaryEmailAddress?.emailAddress,
+      userName: user?.fullName,
+      userProfileImage: user?.imageUrl,
+    });
+    console.log('Finish: ' + result);
     setLoading(false);
   };
 
