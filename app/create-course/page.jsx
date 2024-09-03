@@ -17,6 +17,7 @@ import { db } from '@/configs/db';
 import { CourseList } from '@/configs/schema';
 import { useUser } from '@clerk/nextjs';
 import uuid4 from 'uuid4';
+import { useRouter } from 'next/navigation';
 
 function CreateCourse() {
   const StepperOptions = [
@@ -41,6 +42,7 @@ function CreateCourse() {
   const [loading, setLoading] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const { user } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     console.log(userCourseInput);
@@ -98,7 +100,7 @@ function CreateCourse() {
 
   const handleSaveCourseInDb = async (courseLayout) => {
     setLoading(true);
-    var id = uuid4();
+    var id = uuid4(); // Generate a unique ID for the course
     const result = await db.insert(CourseList).values({
       courseId: id,
       name: userCourseInput.topic,
@@ -111,6 +113,7 @@ function CreateCourse() {
     });
     console.log('Finish: ' + result);
     setLoading(false);
+    router.push(`/create-course/${id}`);
   };
 
   return (
