@@ -6,6 +6,7 @@ import {
 } from 'react-icons/hi2';
 
 function CourseDetail({ course }) {
+  console.log(course);
   return (
     <div className="border p-6 rounded-xl mt-3">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
@@ -30,7 +31,7 @@ function CourseDetail({ course }) {
           <div>
             <h2 className="text-xs text-gray-500">No of Chapters</h2>
             <h2 className="font-medium text-lg">
-              {course?.courseOutput?.course?.noOfChapters}
+              {course?.courseOutput?.course?.chapters?.length}
             </h2>
           </div>
         </div>

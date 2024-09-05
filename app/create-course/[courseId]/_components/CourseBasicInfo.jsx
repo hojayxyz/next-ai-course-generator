@@ -9,7 +9,7 @@ import { db } from '@/configs/db';
 import { CourseList } from '@/configs/schema';
 import { eq } from 'drizzle-orm';
 
-function CourseBasicInfo({ course, refreshData }) {
+function CourseBasicInfo({ course, refreshData, edit = true }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
@@ -51,7 +51,9 @@ function CourseBasicInfo({ course, refreshData }) {
         <div>
           <h2 className="font-bold text-3xl">
             {course?.courseOutput?.course?.name}{' '}
-            <EditCourseBasicInfo course={course} refreshData={refreshData} />
+            {edit && (
+              <EditCourseBasicInfo course={course} refreshData={refreshData} />
+            )}
           </h2>
           <p className="text-sm text-gray-400 mt-3">
             {course?.courseOutput?.course?.description}
@@ -69,7 +71,7 @@ function CourseBasicInfo({ course, refreshData }) {
               alt="logo"
               width={300}
               height={300}
-              className="w-full border rounded-xl h-[250px] object-cover cursor-pointer"
+              className="w-full border rounded-xl h-[250px] object-cover"
             />
           </label>
           <input
@@ -77,6 +79,7 @@ function CourseBasicInfo({ course, refreshData }) {
             id="upload-image"
             className="hidden"
             onChange={onFileSelected}
+            disabled={!edit}
           />
         </div>
       </div>

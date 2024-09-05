@@ -1,9 +1,11 @@
 'use client';
 
+import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
 import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useContext } from 'react';
 import {
   HiOutlineHome,
   HiOutlinePower,
@@ -12,6 +14,9 @@ import {
 } from 'react-icons/hi2';
 
 function SideBar() {
+  const { userCourseList, setUserCourseList } = useContext(
+    UserCourseListContext
+  );
   const Menu = [
     { id: 1, name: 'Home', icon: <HiOutlineHome />, path: '/dashboard' },
     {
@@ -55,9 +60,9 @@ function SideBar() {
           ))}
         </ul>
         <div className="absolute bottom-10 w-[80%]">
-          <Progress value={50} />
+          <Progress value={(userCourseList?.length / 5) * 100} />
           <h2 className="text-sm my-2 text-gray-500">
-            3 out of 5 courses created
+            {userCourseList.length} out of 5 courses created
           </h2>
           <h2 className="text-xs text-gray-500">
             Upgrade your plan for unlimited course generation
