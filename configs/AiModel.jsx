@@ -51,3 +51,27 @@ export const GenerateCourseLayout = model.startChat({
 
 // const result = await chatSession.sendMessage('INSERT_INPUT_HERE');
 // console.log(result.response.text());
+
+export const GenerateCourseChapter_AI = model.startChat({
+  generationConfig,
+  // safetySettings: Adjust safety settings
+  // See https://ai.google.dev/gemini-api/docs/safety-settings
+  history: [
+    {
+      role: 'user',
+      parts: [
+        {
+          text: 'Explain the concept in Detail on Topic: Python Basic, Chapter:Variables and Data Types, in JSON Format with list of array with field as title, explanation on given chapter detail, Code Example(Code field in <precode> format) if applicable',
+        },
+      ],
+    },
+    {
+      role: 'model',
+      parts: [
+        {
+          text: '```json\n[\n  {\n    "title": "Introduction to Variables",\n    "explanation": "Variables are like containers that store data in your Python program. They allow you to give meaningful names to pieces of information so you can easily access and manipulate them.",\n    "code_example": "<precode>name = \\"Alice\\"  # Storing a string value\\nage = 30      # Storing an integer value\\nprint(name)  # Output: Alice\\nprint(age)   # Output: 30</precode>"\n  },\n  {\n    "title": "Variable Naming Rules",\n    "explanation": "- Variable names must start with a letter (a-z, A-Z) or an underscore (_).\\n- They can contain letters, numbers, and underscores.\\n- Variable names are case-sensitive (e.g., `age` is different from `Age`).\\n- It\'s best to choose descriptive names that reflect the data they store.",\n    "code_example": "<precode>my_variable = 10  # Valid variable name\\n_another_variable = 20  # Valid\\n2nd_variable = 30  # Invalid (starts with a number)\\nmy-variable = 40  # Invalid (contains a hyphen)</precode>"\n  },\n  {\n    "title": "Data Types",\n    "explanation": "Python has various built-in data types to represent different kinds of information:\\n\\n- **Integer (int):** Whole numbers (e.g., 10, -5, 0)\\n- **Float (float):** Numbers with decimal points (e.g., 3.14, -2.5)\\n- **String (str):** Text enclosed in quotes (e.g., \\"Hello\\", \'Python\')\\n- **Boolean (bool):** Represents truth values (True or False)\\n- **List (list):** Ordered collections of items (e.g., [1, 2, 3], [\'apple\', \'banana\'])",\n    "code_example": "<precode>age = 25        # Integer\\nprice = 19.99   # Float\\nmessage = \\"Hello\\"  # String\\nis_active = True    # Boolean\\nfruits = [\'apple\', \'banana\', \'orange\']  # List</precode>"\n  },\n  {\n    "title": "Data Type Conversions",\n    "explanation": "You can convert data from one type to another using built-in functions:\\n\\n- **int():** Convert to integer\\n- **float():** Convert to float\\n- **str():** Convert to string\\n- **bool():** Convert to boolean",\n    "code_example": "<precode>number = \\"10\\"    # String representation of a number\\ninteger_number = int(number)  # Convert to integer\\nprint(integer_number)  # Output: 10</precode>"\n  },\n  {\n    "title": "Variable Assignment",\n    "explanation": "You assign values to variables using the `=` operator. The value on the right side is assigned to the variable on the left side.",\n    "code_example": "<precode>x = 5  # Assigning the value 5 to the variable x\\ny = \\"Hello\\"   # Assigning the string \\"Hello\\" to the variable y</precode>"\n  },\n  {\n    "title": "Variable Reassignment",\n    "explanation": "You can change the value of a variable by assigning a new value to it.",\n    "code_example": "<precode>count = 10\\nprint(count)  # Output: 10\\ncount = count + 5  # Incrementing the value\\nprint(count)  # Output: 15</precode>"\n  }\n]\n```',
+        },
+      ],
+    },
+  ],
+});
