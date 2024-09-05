@@ -1,7 +1,7 @@
 'use client';
 
 import { db } from '@/configs/db';
-import { CourseList } from '@/configs/schema';
+import { Chapters, CourseList } from '@/configs/schema';
 import { useUser } from '@clerk/nextjs';
 import { and, eq } from 'drizzle-orm';
 import { useEffect, useState } from 'react';
@@ -11,11 +11,14 @@ import ChapterList from './_components/ChapterList';
 import { Button } from '@/components/ui/button';
 import { GenerateCourseChapter_AI } from '@/configs/AiModel';
 import LoadingDialog from '../_components/LoadingDialog';
+import service from '@/configs/service';
+import { useRouter } from 'next/navigation';
 
 function CourseLayout({ params }) {
   const { user } = useUser();
   const [course, setCourse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     params && GetCourse();
@@ -43,19 +46,38 @@ function CourseLayout({ params }) {
     chapters.forEach(async (chapter, index) => {
       const PROMPT = `Explain the concept in Detail on Topic: ${course?.name}, Chapter: ${chapter?.name}, in JSON Format with list of array with field as title, explanation on given chapter detail, Code Example(Code field in <precode> format) if applicable`;
       console.log(PROMPT);
-      if (index === 0) {
-        try {
-          const result = await GenerateCourseChapter_AI.sendMessage(PROMPT);
-          console.log(result?.response?.text());
-          // Generate Video URL
+      // if (index === 0) {
+      try {
+        let videoId = '';
+        // Generate Video URL
+        const videos = await service
+          .getVideos(course?.name + ': ' + chapter?.name)
+          .then((res) => {
+            console.log(res);
+            videoId = res[0]?.id?.videoId;
+          });
+        // Generate Course Content
+        const result = await GenerateCourseChapter_AI.sendMessage(PROMPT);
+        console.log(result?.response?.text());
+        const content = JSON.parse(result?.response?.text());
 
-          // Save Chapter Content + Video URL to DB
-          setIsLoading(false);
-        } catch (error) {
-          console.log(error);
-          setIsLoading(false);
-        }
+        // Save Chapter Content + Video URL to DB
+        await db.insert(Chapters).values({
+          chapterId: index,
+          courseId: course?.courseId,
+          content: content,
+          videoId: videoId,
+        });
+        setIsLoading(false);
+        await db.update(CourseList).set({
+          published: true,
+        });
+        router.replace(`/create-course/${course?.courseId}/finish`);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
       }
+      // }
     });
   };
 

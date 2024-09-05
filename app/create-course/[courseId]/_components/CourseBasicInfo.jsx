@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { HiOutlinePuzzlePiece } from 'react-icons/hi2';
 import EditCourseBasicInfo from './EditCourseBasicInfo';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { storage } from '@/configs/firebaseConfig';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db } from '@/configs/db';
@@ -11,6 +11,12 @@ import { eq } from 'drizzle-orm';
 
 function CourseBasicInfo({ course, refreshData }) {
   const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    if (course?.courseBanner) {
+      setSelectedImage(course?.courseBanner);
+    }
+  }, [course]);
 
   /**
    * Upload image to firebase storage
