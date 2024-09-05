@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 function Hero() {
   return (
     <section className="bg-gray-50">
@@ -17,16 +19,17 @@ function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <a
+            <Link
+              href="/dashboard"
               className="block w-full rounded bg-primary px-12 py-3 text-sm font-medium text-white shadow hover:bg-red-700 focus:outline-none focus:ring active:bg-red-500 sm:w-auto"
-              href="#"
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
 export default Hero;

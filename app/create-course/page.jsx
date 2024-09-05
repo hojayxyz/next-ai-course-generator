@@ -75,7 +75,7 @@ function CreateCourse() {
           !video ||
           video.trim() === '' ||
           !chapters ||
-          chapters.length === 0
+          chapters === 1
         );
       default:
         return false;
@@ -86,7 +86,7 @@ function CreateCourse() {
     setLoading(true);
     const BASIC_PROMPT =
       'Generate A Course Tutorial on Following Detail with field as Course Name, Description, along with Chapter Name, About, Duration: ';
-    const USER_INPUT_PROMPT = `Category: ${userCourseInput.category}, Topic: ${userCourseInput.topic}, Level: ${userCourseInput.level}, Duration: ${userCourseInput.duration}, NoOfChapters: ${userCourseInput.noOfChapters}`;
+    const USER_INPUT_PROMPT = `Category: ${userCourseInput.category}, Topic: ${userCourseInput.topic}, Level: ${userCourseInput.level}, Duration: ${userCourseInput.duration}, NoOfChapters: ${userCourseInput.chapters}`;
     console.log(BASIC_PROMPT + USER_INPUT_PROMPT);
 
     const result = await GenerateCourseLayout.sendMessage(
@@ -105,6 +105,7 @@ function CreateCourse() {
       courseId: id,
       name: userCourseInput.topic,
       level: userCourseInput.level,
+      noOfChapters: userCourseInput.chapters,
       category: userCourseInput.category,
       courseOutput: courseLayout,
       createdBy: user?.primaryEmailAddress?.emailAddress,

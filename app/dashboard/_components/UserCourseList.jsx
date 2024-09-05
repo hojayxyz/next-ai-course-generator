@@ -4,7 +4,7 @@ import { db } from '@/configs/db';
 import { CourseList } from '@/configs/schema';
 import { useUser } from '@clerk/nextjs';
 import { eq } from 'drizzle-orm';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import CourseCard from './CourseCard';
 import { UserCourseListContext } from '@/app/_context/UserCourseListContext';
 
@@ -19,14 +19,14 @@ function UserCourseList() {
     user && getUserCourses();
   }, [user]);
 
-  const getUserCourses = async () => {
+  const getUserCourses = useCallback(async () => {
     const result = await db
       .select()
       .from(CourseList)
       .where(eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress));
     setCourseList(result);
     setUserCourseList(result);
-  };
+  }, [user]);
 
   return (
     <div className="mt-10">

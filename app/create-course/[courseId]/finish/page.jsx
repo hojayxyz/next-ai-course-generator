@@ -45,12 +45,12 @@ function FinishScreen({ params }) {
         Course URL:
       </h2>
       <h2 className="text-center text-gray-400 border p-2 rounded-md flex gap-5 items-center justify-center">
-        {process.env.NEXT_PUBLIC_HOST_NAME}/course/view/{course?.courseId}
+        {process.env.NEXT_PUBLIC_HOST_NAME}/course/{course?.courseId}
         <HiOutlineClipboardDocumentCheck
           className="h-5 w-5 cursor-pointer"
           onClick={async () =>
             await navigator.clipboard.writeText(
-              `${process.env.NEXT_PUBLIC_HOST_NAME}/course/view/${course?.courseId}`
+              `${process.env.NEXT_PUBLIC_HOST_NAME}/course/${course?.courseId}`
             )
           }
         />

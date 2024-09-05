@@ -42,7 +42,9 @@ function SideBar() {
 
   return (
     <div className="fixed h-full md:w-64 p-5 shadow-md">
-      <Image src={'/logo.svg'} width={100} height={100} />
+      <Link href="/dashboard">
+        <Image src={'/logo.svg'} width={100} height={100} alt="Logo" />
+      </Link>
       <hr className="my-5" />
       <div>
         <ul>

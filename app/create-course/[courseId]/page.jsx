@@ -26,18 +26,23 @@ function CourseLayout({ params }) {
 
   const GetCourse = async () => {
     setIsLoading(true);
-    const result = await db
-      .select()
-      .from(CourseList)
-      .where(
-        and(
-          eq(CourseList.courseId, params?.courseId),
-          eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress)
-        )
-      );
-    setCourse(result[0]);
-    setIsLoading(false);
-    console.log(result);
+    try {
+      const result = await db
+        .select()
+        .from(CourseList)
+        .where(
+          and(
+            eq(CourseList.courseId, params?.courseId),
+            eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress)
+          )
+        );
+      setCourse(result[0]);
+    } catch (error) {
+      console.error('Error fetching course:', error);
+      // Handle the error appropriately (e.g., show an error message to the user)
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const GenerateChapterContent = async () => {
@@ -46,7 +51,7 @@ function CourseLayout({ params }) {
     chapters.forEach(async (chapter, index) => {
       const PROMPT = `Explain the concept in Detail on Topic: ${course?.name}, Chapter: ${chapter?.name}, in JSON Format with list of array with field as title, explanation on given chapter detail, Code Example(Code field in <precode> format) if applicable`;
       console.log(PROMPT);
-      // if (index === 0) {
+
       try {
         let videoId = '';
         // Generate Video URL
@@ -68,16 +73,16 @@ function CourseLayout({ params }) {
           content: content,
           videoId: videoId,
         });
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      } finally {
         setIsLoading(false);
         await db.update(CourseList).set({
           published: true,
         });
         router.replace(`/create-course/${course?.courseId}/finish`);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
       }
-      // }
     });
   };
 

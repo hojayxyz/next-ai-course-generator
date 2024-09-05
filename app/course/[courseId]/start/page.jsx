@@ -6,15 +6,21 @@ import { and, eq } from 'drizzle-orm';
 import { useEffect, useState } from 'react';
 import ChapterListCard from './_components/ChapterListCard';
 import ChapterContent from './_components/ChapterContent';
+import Header from '@/app/dashboard/_components/Header';
 
 function CourseStart({ params }) {
-  const [course, setCourse] = useState();
+  const [course, setCourse] = useState(null);
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [selectedChapterContent, setSelectedChapterContent] = useState(null);
 
   useEffect(() => {
     GetCourse();
   }, []);
+
+  useEffect(() => {
+    setSelectedChapter(course?.courseOutput?.course?.chapters[0]);
+    GetSelectedChapterContent(0);
+  }, [course]);
 
   const GetCourse = async () => {
     const result = await db
@@ -23,7 +29,6 @@ function CourseStart({ params }) {
       .where(eq(CourseList?.courseId, params?.courseId));
 
     setCourse(result[0]);
-    GetSelectedChapterContent(0);
   };
 
   const GetSelectedChapterContent = async (chapterId) => {
@@ -43,6 +48,7 @@ function CourseStart({ params }) {
 
   return (
     <div>
+      <Header />
       {/* Chapter list side bar */}
       <div className="fixed md:w-64 hidden md:block h-screen border-r shadow-sm">
         <h2 className="text-lg font-medium bg-primary p-4 text-white">

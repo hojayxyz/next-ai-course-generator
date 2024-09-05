@@ -13,9 +13,11 @@ function ChapterContent({ chapter, content }) {
       <p className=" text-gray-500">{chapter?.about}</p>
 
       {/* Video */}
-      <div className="flex justify-center items-center my-6">
-        <YouTube videoId={content?.videoId} opts={opts} />
-      </div>
+      {content?.videoId && (
+        <div className="flex justify-center items-center my-6">
+          <YouTube videoId={content?.videoId} opts={opts} />
+        </div>
+      )}
 
       <div>
         {content?.content?.map((item, index) => (
