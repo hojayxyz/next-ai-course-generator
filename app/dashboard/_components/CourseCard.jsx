@@ -10,7 +10,7 @@ import { CourseList } from '@/configs/schema';
 import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 
-function CourseCard({ course, refreshData }) {
+function CourseCard({ course, refreshData, displayUser = false }) {
   const handleDelete = async () => {
     const resp = await db
       .delete(CourseList)
@@ -50,6 +50,18 @@ function CourseCard({ course, refreshData }) {
             <HiOutlineStar /> {course?.level}
           </h2>
         </div>
+        {displayUser && (
+          <div className="flex items-center gap-2 mt-2">
+            <Image
+              src={course?.userProfileImage}
+              alt={course?.userName}
+              width={30}
+              height={30}
+              className="rounded-full"
+            />
+            <h2 className="text-sm font-medium">{course?.userName}</h2>
+          </div>
+        )}
       </div>
     </div>
   );
